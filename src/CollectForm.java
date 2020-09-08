@@ -189,9 +189,9 @@ public class CollectForm extends JFrame {
         result[2][2] = findBottomRightImage(result[2][1]);
     }
 
-    /*private BufferedImage findCenterImage() {
+    private BufferedImage findCenterImage() {
         BufferedImage centerImage = new BufferedImage(images[0][0].getWidth(), images[0][0].getHeight(), images[0][0].getType());
-        int centerCount = 0;
+        int centerCount = Integer.MAX_VALUE;
         for (int i = 0; i < images.length; ++i) {
             for (int j = 0; j < images[i].length; ++j) {
                 BufferedImage tested = images[i][j];
@@ -222,61 +222,13 @@ public class CollectForm extends JFrame {
                         }
                     }
                 }
-                if (count > centerCount) {
+                if (count < centerCount) {
                     centerImage = tested;
                     centerCount = count;
                 }
             }
         }
         return centerImage;
-    }*/
-
-    private BufferedImage findCenterImage() {
-        final double multiplier = 0.95;
-        for (int i = 0; i < images.length; ++i) {
-            for (int j = 0; j < images[i].length; ++j) {
-                BufferedImage tested = images[i][j];
-                int count = 0;
-                for (int k = 0; k < images.length; ++k) {
-                    for (int l = 0; l < images[k].length; ++l) {
-                        if (k == i && l == j) continue;
-                        BufferedImage temp = images[k][l];
-                        int tempCount = 0;
-                        for (int y = 0; y < tested.getWidth(); ++y) {
-                            Color testedColor = new Color(tested.getRGB(0, y));
-                            Color tempColor = new Color(temp.getRGB(temp.getHeight() - 1, y));
-                            if (isSameColor(testedColor, tempColor)) ++tempCount;
-                        }
-                        if (tempCount > (int)Math.round(tested.getWidth() * multiplier)) ++count;
-                        tempCount = 0;
-                        for (int y = 0; y < tested.getWidth(); ++y) {
-                            Color testedColor = new Color(tested.getRGB(tested.getHeight() - 1, y));
-                            Color tempColor = new Color(temp.getRGB(0, y));
-                            if (isSameColor(testedColor, tempColor)) ++tempCount;
-                        }
-                        if (tempCount > tested.getWidth() * multiplier) ++count;
-                        tempCount = 0;
-                        for (int x = 0; x < tested.getHeight(); ++x) {
-                            Color testedColor = new Color(tested.getRGB(x, 0));
-                            Color tempColor = new Color(temp.getRGB(x, temp.getWidth() - 1));
-                            if (isSameColor(testedColor, tempColor)) ++tempCount;
-                        }
-                        if (tempCount > tested.getHeight() * multiplier) ++count;
-                        tempCount = 0;
-                        for (int x = 0; x < tested.getHeight(); ++x) {
-                            Color testedColor = new Color(tested.getRGB(x, tested.getWidth() - 1));
-                            Color tempColor = new Color(temp.getRGB(x, 0));
-                            if (isSameColor(testedColor, tempColor)) ++tempCount;
-                        }
-                        if (tempCount > tested.getHeight() * multiplier) ++count;
-                    }
-                }
-                if (count <= 2) {
-                    return tested;
-                }
-            }
-        }
-        return new BufferedImage(images[0][0].getWidth(), images[0][0].getHeight(), images[0][0].getType());
     }
 
     private BufferedImage findTopImage(BufferedImage center) {
@@ -288,7 +240,7 @@ public class CollectForm extends JFrame {
                 int count = 0;
                 for (int x = 0; x < temp.getWidth(); ++x) {
                     Color centerColor = new Color(center.getRGB(x, 0));
-                    Color tempColor = new Color(temp.getRGB(x, temp.getHeight() - 1));
+                    Color tempColor = new Color(temp.getRGB(x, temp.getWidth() - 1));
                     if (isSameColor(centerColor, tempColor)) ++count;
                 }
                 if (count > topCount) {
@@ -308,7 +260,7 @@ public class CollectForm extends JFrame {
                 BufferedImage temp = images[i][j];
                 int count = 0;
                 for (int x = 0; x < temp.getWidth(); ++x) {
-                    Color centerColor = new Color(center.getRGB(x, center.getHeight() - 1));
+                    Color centerColor = new Color(center.getRGB(x, center.getWidth() - 1));
                     Color tempColor = new Color(temp.getRGB(x, 0));
                     if (isSameColor(centerColor, tempColor)) ++count;
                 }
